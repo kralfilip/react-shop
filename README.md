@@ -32,3 +32,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Example React project
+Create a simple React app with Next.js and TypeScript, other technologies are up to you.
+
+### Requirements:
+- one page with products fetched locally from products.json
+- products displayed in a grid (css grid / flex)
+- search field for filtering products by name
+- each product has buttons "add" and "remove" from the cart
+- simple cart section with an overview of added products and total price, state of the cart is persisted in window.localStorage
