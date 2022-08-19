@@ -33,11 +33,11 @@ const ProductCard: React.FC<Props> = ({item, cartItems, handleAddToCart, handleR
                       justifyContent="center"
                       spacing={0}
                       alignItems="center"
-                      style={{marginTop:'10px'}}>
+                      style={{marginTop: '10px'}}>
                     {cartItem.length > 0 ?
                         <>
                             <Grid item key={uuid()} xs={4} style={{textAlign: "right"}}>
-                                <Button size={"small"} variant="outlined" style={{width:'55px'}}
+                                <Button size={"small"} variant="outlined" style={{width: '55px'}}
                                         onClick={() => handleRemoveFromCart(item.id)}>-</Button>
                             </Grid>
                             <Grid item key={uuid()} xs={4} style={{textAlign: "center"}}>

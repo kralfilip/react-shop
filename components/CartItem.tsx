@@ -1,7 +1,7 @@
 import {FullProduct} from "../classes/FullProduct";
 import React from "react";
 import {Box} from "@mui/system";
-import {Button, CardMedia, Divider, Grid, Typography} from "@mui/material";
+import {Button, CardMedia, Grid, Typography} from "@mui/material";
 import {v4 as uuid} from "uuid";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const CartItem: React.FC<Props> = ({item, handleAddToCart, handleRemoveFromCart}) => {
     return (
-        <Box component={"div"} style={{marginTop: '20px', marginLeft:'10px', maxHeight:'170px', minHeight: '100px'}}>
+        <Box component={"div"} style={{marginTop: '20px', marginLeft: '10px', maxHeight: '170px', minHeight: '100px'}}>
             <Grid container justifyContent={"center"}>
                 <Grid item key={uuid()} xs={3}>
                     <CardMedia component='img' image={item.image} style={{

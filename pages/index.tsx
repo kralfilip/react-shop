@@ -2,7 +2,7 @@ import ProductList from "../components/ProductList";
 import FilterBox from "../components/FilterBox";
 import Cart from "../components/Cart";
 import initialData from "../products.json"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Drawer, Grid} from "@mui/material";
 import {Box} from "@mui/system";
 import {FullProduct} from "../classes/FullProduct";
@@ -15,7 +15,7 @@ export default function Home() {
 
     const products: FullProduct[] = [];
     initialData.map(product => {
-        products.push( new FullProduct(product))
+        products.push(new FullProduct(product))
     })
     const [searchTerm, setSearchTerm] = useState('')
     const [filteredProducts, setFilteredProducts] = useState<FullProduct[]>(products)
@@ -33,9 +33,7 @@ export default function Home() {
             })
             setCartItems(productsWithItemCount)
         }
-    },[])
-
-
+    }, [])
 
     const searchInputHandler = (enteredInput: string) => {
         setSearchTerm(enteredInput);
@@ -44,10 +42,9 @@ export default function Home() {
         if (searchTerm === '') {
             setFilteredProducts(products)
         } else {
-            console.log('useeffect searchterm' + searchTerm);
             setFilteredProducts(products.filter(product => product.name.toLowerCase().includes(searchTerm)))
         }
-    },[searchTerm])
+    }, [searchTerm])
 
 
     const handleAddToCart = (clickedItem: FullProduct) => {
@@ -56,11 +53,11 @@ export default function Home() {
             if (isItemInCart) {
                 prev.map(item => addItemToLocalStorage(item));
                 return prev.map(item => (
-                    item.id === clickedItem.id ? { ...item, amount: item.amount + 1} : item
+                    item.id === clickedItem.id ? {...item, amount: item.amount + 1} : item
                 ))
             }
             addItemToLocalStorage(clickedItem)
-            return [...prev, { ...clickedItem, amount: clickedItem.amount + 1}]
+            return [...prev, {...clickedItem, amount: clickedItem.amount + 1}]
         })
     };
 
@@ -68,7 +65,7 @@ export default function Home() {
         localStorage.setItem(item.id.toString(), (item.amount + 1).toString())
     }
 
-    const handleRemoveFromCart = (id: number) =>  {
+    const handleRemoveFromCart = (id: number) => {
         console.log(cartItems)
         setCartItems(prev => (
             prev.reduce((ack, item) => {
@@ -91,9 +88,18 @@ export default function Home() {
     return (
         <ThemeProvider theme={rohlikTheme}>
             <Box component={"div"}>
-                <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
-                <Grid container justifyContent={"center"} style={{marginTop:'50px'}}>
-                    <Grid item key={uuid()} xs={9} style={{marginRight:'280px'}}>
+                <Box component={'div'}
+                     style={{position: 'sticky', backgroundColor: '#6DA305', top: '0', height: '50px', zIndex: 2}}
+                     display="flex"
+                     alignItems="center">
+                    <Grid container>
+                        <Grid item key={uuid()} xs={3} style={{textAlign: 'right'}}>
+                            <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Grid container justifyContent={"center"} style={{marginTop: '50px'}}>
+                    <Grid item key={uuid()} xs={9} style={{marginRight: '280px'}}>
                         <ProductList products={filteredProducts} cartItems={cartItems} handleAddToCart={handleAddToCart}
                                      handleRemoveFromCart={handleRemoveFromCart}/>
                     </Grid>
@@ -108,5 +114,5 @@ export default function Home() {
             </Box>
         </ThemeProvider>
 
-)
+    )
 }
