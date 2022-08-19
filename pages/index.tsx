@@ -3,16 +3,39 @@ import FilterBox from "../components/FilterBox";
 import Cart from "../components/Cart";
 import initialData from "../products.json"
 import {useEffect, useState} from "react";
-import ProductCard, {IProduct} from "../components/ProductCard";
-import {Drawer} from "@mui/material";
+import {Drawer, Grid} from "@mui/material";
 import {Box} from "@mui/system";
+import {FullProduct} from "../classes/FullProduct";
+import {rohlikTheme} from "../themes/RohlikTheme";
+import {ThemeProvider} from "@mui/material/styles";
+import {v4 as uuid} from "uuid";
+
 
 export default function Home() {
 
-    const products = initialData;
+    const products: FullProduct[] = [];
+    initialData.map(product => {
+        products.push( new FullProduct(product))
+    })
     const [searchTerm, setSearchTerm] = useState('')
-    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>(initialData)
-    const [cartItems, setCartItems] = useState<IProduct[]>([])
+    const [filteredProducts, setFilteredProducts] = useState<FullProduct[]>(products)
+
+    const [cartItems, setCartItems] = useState<FullProduct[]>([])
+
+    useEffect(() => {
+        if (typeof window !== undefined) {
+            const productsWithItemCount: FullProduct[] = [];
+            products.forEach(element => {
+                const localStorageProduct = localStorage.getItem(element.id.toString())
+                if (localStorageProduct !== null && localStorageProduct !== '0') {
+                    productsWithItemCount.push({...element, amount: parseInt(localStorageProduct)})
+                }
+            })
+            setCartItems(productsWithItemCount)
+        }
+    },[])
+
+
 
     const searchInputHandler = (enteredInput: string) => {
         setSearchTerm(enteredInput);
@@ -26,40 +49,64 @@ export default function Home() {
         }
     },[searchTerm])
 
-    const handleAddToCart = (clickedItem: IProduct) => {
-        setCartItems(prev => {
-            const isItemInCart = prev.find(item => item.id === clickedItem.id)
 
+    const handleAddToCart = (clickedItem: FullProduct) => {
+        setCartItems(prev => {
+            const isItemInCart = prev.some(item => item.id === clickedItem.id)
             if (isItemInCart) {
+                prev.map(item => addItemToLocalStorage(item));
                 return prev.map(item => (
-                    item.id === clickedItem.id ? { ...item, amount: item.amount === undefined ? item.amount = 1 : item.amount + 1} : item
+                    item.id === clickedItem.id ? { ...item, amount: item.amount + 1} : item
                 ))
             }
-            return [...prev, { ...clickedItem, amount: 1}]
+            addItemToLocalStorage(clickedItem)
+            return [...prev, { ...clickedItem, amount: clickedItem.amount + 1}]
         })
     };
+
+    const addItemToLocalStorage = (item: FullProduct) => {
+        localStorage.setItem(item.id.toString(), (item.amount + 1).toString())
+    }
+
     const handleRemoveFromCart = (id: number) =>  {
+        console.log(cartItems)
         setCartItems(prev => (
             prev.reduce((ack, item) => {
                 if (item.id === id) {
                     if (item.amount === 1) {
+                        localStorage.removeItem(id.toString())
                         return ack;
                     } else {
-                        return [...ack, {...item, amount: item.amount === undefined ? item.amount = 0 : item.amount - 1}]
+                        const subtractedItemAmount = item.amount - 1;
+                        localStorage.setItem(id.toString(), subtractedItemAmount.toString())
+                        return [...ack, {...item, amount: subtractedItemAmount}]
                     }
                 } else {
                     return [...ack, item];
                 }
-            }, [] as IProduct[])
+            }, [] as FullProduct[])
         ))
+        console.log(cartItems)
     };
     return (
-        <Box component={"div"}>
-            <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
-            <ProductList products={filteredProducts} cartItems={cartItems} handleAddToCart={handleAddToCart} handleRemoveFromCart={handleRemoveFromCart}/>
-            <Drawer anchor="right" variant="permanent">
-                <Cart cartItems={cartItems} handleAddToCart={handleAddToCart} handleRemoveFromCart={handleRemoveFromCart}/>
-            </Drawer>
-        </Box>
+        <ThemeProvider theme={rohlikTheme}>
+            <Box component={"div"}>
+                <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
+                <Grid container justifyContent={"center"} style={{marginTop:'50px'}}>
+                    <Grid item key={uuid()} xs={9} style={{marginRight:'280px'}}>
+                        <ProductList products={filteredProducts} cartItems={cartItems} handleAddToCart={handleAddToCart}
+                                     handleRemoveFromCart={handleRemoveFromCart}/>
+                    </Grid>
+                    <Grid item key={uuid()} xs={3}>
+                        <Drawer anchor="right" variant="permanent"
+                                style={{maxWidth: '300px', width: '100%', minWidth: '300px'}}>
+                            <Cart cartItems={cartItems} handleAddToCart={handleAddToCart}
+                                  handleRemoveFromCart={handleRemoveFromCart}/>
+                        </Drawer>
+                    </Grid>
+                </Grid>
+            </Box>
+        </ThemeProvider>
+
 )
 }

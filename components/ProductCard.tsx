@@ -1,31 +1,27 @@
 import {Card, CardContent, CardMedia, Typography, Button, Grid} from "@mui/material";
-import {useState} from "react";
+import {FullProduct} from "../classes/FullProduct";
+import {v4 as uuid} from "uuid";
 
-export type IProduct = {
-    id: number;
-    name: string;
-    image: string;
-    amount?: number;
-    price: {
-        full: number,
-        currency: string
-    };
-}
 
 type Props = {
-    item: IProduct;
-    cartItems: IProduct[];
-    handleAddToCart: (clickedItem: IProduct) => void;
+    item: FullProduct;
+    cartItems: FullProduct[];
+    handleAddToCart: (clickedItem: FullProduct) => void;
     handleRemoveFromCart: (id: number) => void;
 }
-
 
 
 const ProductCard: React.FC<Props> = ({item, cartItems, handleAddToCart, handleRemoveFromCart}) => {
     const cartItem = cartItems.filter(cartItem => cartItem.id === item.id);
     return (
-        <Card sx={{maxHeight: 350, maxWidth:350}}>
-            <CardMedia component='img' height='40%' width='40%' image={item.image} />
+        <Card elevation={4}>
+            <CardMedia component='img' image={item.image} style={{
+                objectFit: "contain",
+                maxHeight: '120px',
+                width: '100%',
+                maxWidth: '400px',
+                height: '100%'
+            }}/>
             <CardContent>
                 <Typography component='div'>
                     {item.name}
@@ -33,17 +29,33 @@ const ProductCard: React.FC<Props> = ({item, cartItems, handleAddToCart, handleR
                 <Typography component='div'>
                     {item.price.full} {item.price.currency}
                 </Typography>
-                {cartItem.length > 0 ?
-                    <Grid container justifyContent="center">
-                        <Button size={"small"} variant="outlined" onClick={() => handleRemoveFromCart(item.id)}>-</Button>
-                        {cartItem[0].amount}
-                        <Button size={"small"} variant="contained" onClick={() => handleAddToCart(item)}>+</Button>
-                    </Grid>
-                    :
-                    <Grid container justifyContent="center">
-                        <Button size={"small"} variant="outlined" onClick={() => handleAddToCart(item)}>Add to cart</Button>
-                    </Grid>
-                }
+                <Grid container
+                      justifyContent="center"
+                      spacing={0}
+                      alignItems="center"
+                      style={{marginTop:'10px'}}>
+                    {cartItem.length > 0 ?
+                        <>
+                            <Grid item key={uuid()} xs={4} style={{textAlign: "right"}}>
+                                <Button size={"small"} variant="outlined" style={{width:'55px'}}
+                                        onClick={() => handleRemoveFromCart(item.id)}>-</Button>
+                            </Grid>
+                            <Grid item key={uuid()} xs={4} style={{textAlign: "center"}}>
+                                {cartItem[0].amount}
+                            </Grid>
+                            <Grid item key={uuid()} xs={4} style={{textAlign: "left"}}>
+                                <Button size={"small"} variant="contained"
+                                        onClick={() => handleAddToCart(item)}>+</Button>
+
+                            </Grid>
+
+                        </>
+                        :
+                        <Button size={"small"} variant="outlined" onClick={() => handleAddToCart(item)}>Add to
+                            cart</Button>
+                    }
+                </Grid>
+
             </CardContent>
         </Card>
     )
