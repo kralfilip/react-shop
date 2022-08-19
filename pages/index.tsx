@@ -93,7 +93,7 @@ export default function Home() {
                      display="flex"
                      alignItems="center">
                     <Grid container>
-                        <Grid item key={uuid()} xs={3} style={{textAlign: 'right'}}>
+                        <Grid item key={'filter'} xs={3} style={{textAlign: 'right'}}>
                             <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
                         </Grid>
                     </Grid>
