@@ -1,8 +1,9 @@
 import CartItem from "./CartItem";
-import {FullProduct} from "../classes/FullProduct";
-import {Divider, Typography, Grid} from "@mui/material";
+import {FullProduct} from "../interfaces/FullProduct";
+import {Divider, Typography} from "@mui/material";
 import {Box} from "@mui/system";
 import React from "react";
+import styles from '../styles/Cart.module.css'
 
 
 type Props = {
@@ -12,31 +13,26 @@ type Props = {
 }
 
 const Cart: React.FC<Props> = ({cartItems, handleAddToCart, handleRemoveFromCart}) => {
+    console.log(cartItems)
     const calculateTotal = (items: FullProduct[]) =>
         items.reduce((prevItem, item) => prevItem + item.amount * item.price.full, 0);
     return (
-        <Box component={"div"} style={{maxWidth: '270px', minWidth: '270px'}}>
+        <Box component={"div"} className={styles.main}>
             <Box component={'div'}
-                 style={{position: 'sticky', backgroundColor: '#5C5C5C', top: '0', height: '50px', zIndex: 1}}
-                 display="flex"
-                 alignItems="center"
-                 justifyContent="center">
+                 className={styles.priceBar}>
                 {cartItems.length === 0 ?
-                    <Typography component={"h1"} fontSize={20} fontWeight={'bold'} color={'white'}> Add something to the
+                    <Typography component={"h1"} className={styles.priceText}> Add something to the
                         cart</Typography> :
-                    <Typography component={"h1"} fontSize={20} fontWeight={'bold'} color={'white'}>Total
+                    <Typography component={"h1"} className={styles.priceText}>Total
                         cost: {calculateTotal(cartItems).toFixed(2)} CZK</Typography>}
-
             </Box>
             {cartItems.map(item => (
-                <>
+                <Box key={item.id}>
                     <CartItem key={item.id} item={item} handleAddToCart={handleAddToCart}
                               handleRemoveFromCart={handleRemoveFromCart}/>
-                    <Divider style={{marginTop: '10px'}}/>
-                </>
-
+                    <Divider className={styles.divider}/>
+                </Box>
             ))}
-
         </Box>
     )
 }

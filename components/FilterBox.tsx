@@ -1,4 +1,5 @@
 import {FC} from "react";
+import styles from '../styles/FilterBox.module.css'
 
 const FilterBox: FC<{ searchTerm: string, onSearchInput: (searchTerm: string) => void }> = (props) => {
     const searchTermHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +14,7 @@ const FilterBox: FC<{ searchTerm: string, onSearchInput: (searchTerm: string) =>
             placeholder="What are you craving for..."
             value={props.searchTerm}
             onChange={searchTermHandler}
-            style={{width: '200px', height: '33px', borderRadius: '7px', zIndex: 1}}
+            className={styles.main}
         />
     )
 }

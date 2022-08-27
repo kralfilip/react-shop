@@ -1,8 +1,9 @@
-import {FullProduct} from "../classes/FullProduct";
+import {FullProduct} from "../interfaces/FullProduct";
 import React from "react";
 import {Box} from "@mui/system";
 import {Button, CardMedia, Grid, Typography} from "@mui/material";
 import {v4 as uuid} from "uuid";
+import styles from '../styles/CartItem.module.css'
 
 type Props = {
     item: FullProduct;
@@ -12,13 +13,11 @@ type Props = {
 
 const CartItem: React.FC<Props> = ({item, handleAddToCart, handleRemoveFromCart}) => {
     return (
-        <Box component={"div"} style={{marginTop: '20px', marginLeft: '10px', maxHeight: '170px', minHeight: '100px'}}>
+        <Box component={"div"} className={styles.main}>
             <Grid container justifyContent={"center"}>
                 <Grid item key={uuid()} xs={3}>
-                    <CardMedia component='img' image={item.image} style={{
-                        objectFit: "contain",
-                        maxHeight: '50px', width: '100%', maxWidth: '50px', height: '100%'
-                    }}/>
+                    <CardMedia component='img' image={item.image}
+                               className={styles.cartMedia}/>
                 </Grid>
                 <Grid item key={uuid()} xs={9}>
                     <Box component={"div"}>
@@ -29,21 +28,19 @@ const CartItem: React.FC<Props> = ({item, handleAddToCart, handleRemoveFromCart}
                 </Grid>
             </Grid>
             <Grid container
-                  justifyContent="center"
                   spacing={0}
-                  alignItems="center"
-                  style={{marginTop: '15px'}}>
-                <Grid item key={uuid()} xs={5} style={{textAlign: "right"}}>
+                  className={styles.buttonGrid}>
+                <Grid item key={uuid()} xs={5} className={styles.gridButtonMinus}>
                     <Button size="small" variant={'outlined'}
                             onClick={() => handleRemoveFromCart(item.id)}>
                         -
                     </Button>
                 </Grid>
-                <Grid item key={uuid()} xs={2} style={{textAlign: "center"}}>
+                <Grid item key={uuid()} xs={2} className={styles.gridAmountCenter}>
                     <Typography component={"p"}>{item.amount}</Typography>
 
                 </Grid>
-                <Grid item key={uuid()} xs={5} style={{textAlign: "left"}}>
+                <Grid item key={uuid()} xs={5} className={styles.gridButtonPlus}>
                     <Button size="small" variant={"contained"}
                             onClick={() => handleAddToCart(item)}>
                         +

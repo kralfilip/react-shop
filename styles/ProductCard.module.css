@@ -1,0 +1,25 @@
+.cardMedia {
+    object-fit: contain;
+    max-height: 120px;
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+}
+
+.buttonGrid {
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.gridButtonMinus {
+    text-align: right;
+}
+
+.gridButtonPlus {
+    text-align: left;
+}
+
+.gridAmountCenter {
+    text-align: center;
+}

@@ -5,18 +5,17 @@ import initialData from "../products.json"
 import React, {useEffect, useState} from "react";
 import {Drawer, Grid} from "@mui/material";
 import {Box} from "@mui/system";
-import {FullProduct} from "../classes/FullProduct";
+import {FullProduct} from "../interfaces/FullProduct";
 import {rohlikTheme} from "../themes/RohlikTheme";
 import {ThemeProvider} from "@mui/material/styles";
 import {v4 as uuid} from "uuid";
+import styles from '../styles/index.module.css'
+
 
 
 export default function Home() {
 
-    const products: FullProduct[] = [];
-    initialData.map(product => {
-        products.push(new FullProduct(product))
-    })
+    const products: FullProduct[] = initialData.map(item => ({...item, amount: 0}))
     const [searchTerm, setSearchTerm] = useState('')
     const [filteredProducts, setFilteredProducts] = useState<FullProduct[]>(products)
 
@@ -89,23 +88,21 @@ export default function Home() {
         <ThemeProvider theme={rohlikTheme}>
             <Box component={"div"}>
                 <Box component={'div'}
-                     style={{position: 'sticky', backgroundColor: '#6DA305', top: '0', height: '50px', zIndex: 2}}
-                     display="flex"
-                     alignItems="center">
+                     className={styles.stickyBar}>
                     <Grid container>
-                        <Grid item key={'filter'} xs={3} style={{textAlign: 'right'}}>
+                        <Grid item key={'filter'} xs={3} className={styles.filterGrid}>
                             <FilterBox searchTerm={searchTerm} onSearchInput={searchInputHandler}/>
                         </Grid>
                     </Grid>
                 </Box>
-                <Grid container justifyContent={"center"} style={{marginTop: '50px'}}>
-                    <Grid item key={uuid()} xs={9} style={{marginRight: '280px'}}>
+                <Grid container className={styles.main}>
+                    <Grid item key={uuid()} xs={9} className={styles.productGrid}>
                         <ProductList products={filteredProducts} cartItems={cartItems} handleAddToCart={handleAddToCart}
                                      handleRemoveFromCart={handleRemoveFromCart}/>
                     </Grid>
                     <Grid item key={uuid()} xs={3}>
                         <Drawer anchor="right" variant="permanent"
-                                style={{maxWidth: '300px', width: '100%', minWidth: '300px'}}>
+                                className={styles.drawer}>
                             <Cart cartItems={cartItems} handleAddToCart={handleAddToCart}
                                   handleRemoveFromCart={handleRemoveFromCart}/>
                         </Drawer>

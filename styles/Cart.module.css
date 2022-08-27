@@ -1,0 +1,25 @@
+.main {
+    max-width: 270px;
+    min-width: 270px;
+}
+
+.priceBar {
+    position: sticky;
+    background-color: #5C5C5C;
+    top: 0;
+    height: 50px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.priceText {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.divider {
+    margin-top: 10px;
+}
